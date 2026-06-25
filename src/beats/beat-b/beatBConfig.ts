@@ -9,6 +9,7 @@ export interface MapNode {
 export interface Gate3Option {
   value: string;
   label: string;
+  wrongFeedback?: string;
 }
 
 export interface CaseCardField {
@@ -55,13 +56,18 @@ export interface BeatBConfig {
 
   gate3Header: string;
   gate3Description: string;
-  gate3Options: [Gate3Option, Gate3Option];
+  gate3Options: Gate3Option[];
   gate3CorrectValue: string;
   gate3WrongFeedback: string;
   gate3WrongButtonText: string;
 
   gate3CorrectText: string;
   gate3CorrectSubtext: string;
+
+  /** Procedure note shown after Gate 2 approval (e.g. CCP issued, payment condition) */
+  gate2ProcedureNote?: string;
+  /** Procedure note shown on completion screen */
+  completionProcedureNote?: string;
 
   leg3AnimatingIcon: string;
   leg3AnimatingText: string;
