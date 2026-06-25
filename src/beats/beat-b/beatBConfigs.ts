@@ -7,7 +7,7 @@ export const BEAT_B_014: BeatBConfig = {
 
   mapNodes: [
     { label: "ORIGIN", sub: "France", icon: "\u{1F1EB}\u{1F1F7}" },
-    { label: "FTZ", sub: "Changi", icon: "\u2693" },
+    { label: "FTZ", sub: "Tanjong Pagar", icon: "\u2693" },
     { label: "CLEARANCE", sub: "Customs", icon: "\u{1F3DB}\uFE0F" },
     { label: "DELIVERED", sub: "Singapore", icon: "\u{1F3EA}" },
   ],
@@ -61,7 +61,7 @@ export const BEAT_B_014: BeatBConfig = {
   introDescription:
     "A shipment of 1,200 bottles of Bordeaux wine has arrived from France. Your job: route it through Singapore\u2019s trade checkpoints by choosing the correct permits at each gate.",
 
-  leg1AnimatingText: "\u{1F6A2} Ship arriving at Changi FTZ...",
+  leg1AnimatingText: "\u{1F6A2} Ship arriving at Tanjong Pagar FTZ...",
   leg1ScaffoldingHint:
     "Non-controlled goods moving within the same Free Trade Zone don\u2019t need a permit for the transhipment leg. Keep that in mind for Gate 2.",
 
