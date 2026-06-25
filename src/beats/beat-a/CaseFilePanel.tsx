@@ -135,54 +135,70 @@ export function CaseFilePanel() {
         )}
 
         {tab === "packing" && (
-          <div className="border border-customs-border rounded p-3 space-y-2">
+          <div className="border border-customs-border rounded p-3 space-y-3">
             <p className="text-customs-gold font-bold text-center mb-2">
               PACKING LIST
             </p>
-            <p className="text-white">{pl.outerPack}</p>
-            <p className="text-white">{pl.innerPack}</p>
-            <p className="text-white">= {pl.totalBottles}</p>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center p-2 bg-customs-surface rounded">
+                <span className="text-customs-muted">Outer packaging:</span>
+                <span className="text-white font-bold">{pl.outerPack}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 bg-customs-surface rounded">
+                <span className="text-customs-muted">Inner packaging:</span>
+                <span className="text-white font-bold">{pl.innerPack}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 bg-customs-surface rounded border border-customs-gold/30">
+                <span className="text-customs-gold">Total quantity:</span>
+                <span className="text-white font-bold">{pl.totalBottles}</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-customs-muted mt-2 italic">
+              For dutiable liquor, packing must be declared to the smallest unit (bottle level).
+            </p>
           </div>
         )}
 
         {tab === "bl" && (
-          <div className="border border-customs-border rounded p-3 space-y-2">
+          <div className="border border-customs-border rounded p-3 space-y-3">
             <p className="text-customs-gold font-bold text-center mb-2">
               BILL OF LADING
             </p>
-            <div className="space-y-1">
-              <p>
-                <span className="text-customs-muted">Vessel:</span>{" "}
+            <div className="space-y-1.5">
+              <div className="flex justify-between">
+                <span className="text-customs-muted">Vessel:</span>
                 <span className="text-white">{bl.vessel}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Voyage:</span>{" "}
+              </div>
+              <div className="flex justify-between">
+                <span className="text-customs-muted">Voyage:</span>
                 <span className="text-white">{bl.voyage}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Port of Loading:</span>{" "}
+              </div>
+              <hr className="border-customs-border" />
+              <div className="flex justify-between">
+                <span className="text-customs-muted">Port of Loading:</span>
                 <span className="text-white">{bl.portOfLoading}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Port of Discharge:</span>{" "}
+              </div>
+              <div className="flex justify-between">
+                <span className="text-customs-muted">Port of Discharge:</span>
                 <span className="text-white">{bl.portOfDischarge}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Mode:</span>{" "}
-                <span className="text-white">{bl.mode}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">B/L No.:</span>{" "}
-                <span className="text-white">{bl.blNo}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Container No.:</span>{" "}
-                <span className="text-white">{bl.containerNo}</span>
-              </p>
-              <p>
-                <span className="text-customs-muted">Gross Weight:</span>{" "}
-                <span className="text-white">{bl.grossWeight}</span>
-              </p>
+              </div>
+              <hr className="border-customs-border" />
+              <div className="flex justify-between p-1.5 bg-customs-surface rounded">
+                <span className="text-customs-muted">Mode:</span>
+                <span className="text-white font-bold">{bl.mode}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-customs-muted">B/L No.:</span>
+                <span className="text-white font-mono text-[10px]">{bl.blNo}</span>
+              </div>
+              <div className="flex justify-between p-1.5 bg-customs-surface rounded">
+                <span className="text-customs-muted">Container No.:</span>
+                <span className="text-white font-mono text-[10px]">{bl.containerNo}</span>
+              </div>
+              <div className="flex justify-between p-1.5 bg-customs-surface rounded border border-customs-gold/30">
+                <span className="text-customs-gold">Gross Weight:</span>
+                <span className="text-white font-bold">{bl.grossWeight}</span>
+              </div>
             </div>
           </div>
         )}

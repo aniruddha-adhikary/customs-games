@@ -100,7 +100,7 @@ export function validatePermit(
     });
   }
 
-  if (values.hsQuantity === "-" || values.hsQuantity === "") {
+  if (values.hsQuantity === "-") {
     errors.push({
       code: "QTY_DASH",
       field: "hsQuantity",
@@ -236,51 +236,51 @@ export interface ScoringResult {
 }
 
 export function scorePermit(values: Record<string, string>): ScoringResult {
-  const checks: { field: string; expected: string; check: () => boolean }[] = [
-    { field: "Message Type", expected: "IN", check: () => values.messageType === "IN" },
-    { field: "Declaration Type", expected: "APS", check: () => values.declarationType === "APS" },
-    { field: "Importer UEN", expected: "201835672K", check: () => values.importerUEN === "201835672K" },
-    { field: "Place of Release", expected: "T15 (FTZ)", check: () => values.placeOfReleaseFTZ === "T15" },
-    { field: "Place of Receipt", expected: "Others", check: () => values.placeOfReceiptOthers === "Others" },
-    { field: "HS Code", expected: "2204.21", check: () => values.hsCode?.startsWith("2204.21") || false },
-    { field: "HS Quantity", expected: "900.000 LTR", check: () => {
+  const checks: { field: string; yours: () => string; expected: string; check: () => boolean }[] = [
+    { field: "Message Type", yours: () => values.messageType || "—", expected: "IN", check: () => values.messageType === "IN" },
+    { field: "Declaration Type", yours: () => values.declarationType || "—", expected: "APS", check: () => values.declarationType === "APS" },
+    { field: "Importer UEN", yours: () => values.importerUEN || "—", expected: "201835672K", check: () => values.importerUEN === "201835672K" },
+    { field: "Place of Release", yours: () => values.placeOfReleaseFTZ || "—", expected: "T15 (FTZ)", check: () => values.placeOfReleaseFTZ === "T15" },
+    { field: "Place of Receipt", yours: () => values.placeOfReceiptOthers || "—", expected: "Others", check: () => values.placeOfReceiptOthers === "Others" },
+    { field: "HS Code", yours: () => values.hsCode || "—", expected: "2204.21", check: () => values.hsCode?.startsWith("2204.21") || false },
+    { field: "HS Quantity", yours: () => values.hsQuantity ? `${values.hsQuantity} ${values.hsUnit || "?"}` : "—", expected: "900.000 LTR", check: () => {
       const q = parseFloat(values.hsQuantity);
       return !isNaN(q) && Math.abs(q - 900) < 5;
     }},
-    { field: "HS Unit", expected: "LTR", check: () => values.hsUnit === "LTR" },
-    { field: "Packing Outer", expected: "100 CTN", check: () => values.packingOuter === "100" && values.packingOuterUnit === "CTN" },
-    { field: "Packing Inner", expected: "12 BOT", check: () => values.packingInner === "12" && values.packingInnerUnit === "BOT" },
-    { field: "Cargo Packing Type", expected: "9 (Containerised)", check: () => values.cargoPackingType === "9" },
-    { field: "Transport Mode", expected: "1 (Sea)", check: () => values.transportMode === "1" },
-    { field: "Invoice Currency", expected: "EUR", check: () => values.invoiceCurrency === "EUR" },
-    { field: "Exchange Rate", expected: "1.46", check: () => {
+    { field: "HS Unit", yours: () => values.hsUnit || "—", expected: "LTR", check: () => values.hsUnit === "LTR" },
+    { field: "Packing Outer", yours: () => values.packingOuter ? `${values.packingOuter} ${values.packingOuterUnit || "?"}` : "—", expected: "100 CTN", check: () => values.packingOuter === "100" && values.packingOuterUnit === "CTN" },
+    { field: "Packing Inner", yours: () => values.packingInner ? `${values.packingInner} ${values.packingInnerUnit || "?"}` : "—", expected: "12 BOT", check: () => values.packingInner === "12" && values.packingInnerUnit === "BOT" },
+    { field: "Cargo Packing Type", yours: () => values.cargoPackingType === "9" ? "9 (Containerised)" : values.cargoPackingType === "5" ? "5 (Non-containerised)" : "—", expected: "9 (Containerised)", check: () => values.cargoPackingType === "9" },
+    { field: "Transport Mode", yours: () => values.transportMode === "1" ? "1 (Sea)" : values.transportMode === "4" ? "4 (Air)" : values.transportMode || "—", expected: "1 (Sea)", check: () => values.transportMode === "1" },
+    { field: "Invoice Currency", yours: () => values.invoiceCurrency || "—", expected: "EUR", check: () => values.invoiceCurrency === "EUR" },
+    { field: "Exchange Rate", yours: () => values.exchangeRate || "—", expected: "1.46", check: () => {
       const r = parseFloat(values.exchangeRate);
       return !isNaN(r) && Math.abs(r - 1.46) / 1.46 < 0.005;
     }},
-    { field: "CIF Value (SGD)", expected: "26,244.96", check: () => {
+    { field: "CIF Value (SGD)", yours: () => values.cifValue || "—", expected: "26,244.96", check: () => {
       const v = parseFloat(values.cifValue);
       return !isNaN(v) && Math.abs(v - 26244.96) / 26244.96 < 0.01;
     }},
-    { field: "Freight", expected: "480", check: () => {
+    { field: "Freight", yours: () => values.freight || "—", expected: "480", check: () => {
       const f = parseFloat(values.freight);
       return !isNaN(f) && Math.abs(f - 480) < 5;
     }},
-    { field: "Insurance", expected: "96", check: () => {
+    { field: "Insurance", yours: () => values.insurance || "—", expected: "96", check: () => {
       const i = parseFloat(values.insurance);
       return !isNaN(i) && Math.abs(i - 96) < 5;
     }},
-    { field: "Gross Weight", expected: "1.920 TNE", check: () => {
+    { field: "Gross Weight", yours: () => values.grossWeight ? `${values.grossWeight} ${values.grossWeightUnit || "?"}` : "—", expected: "1.920 TNE", check: () => {
       const w = parseFloat(values.grossWeight);
       return !isNaN(w) && Math.abs(w - 1.92) / 1.92 < 0.05;
     }},
-    { field: "Gross Weight Unit", expected: "TNE", check: () => values.grossWeightUnit === "TNE" },
-    { field: "Payment Condition", expected: "G1", check: () => values.paymentCondition === "G1" },
+    { field: "Gross Weight Unit", yours: () => values.grossWeightUnit || "—", expected: "TNE", check: () => values.grossWeightUnit === "TNE" },
+    { field: "Payment Condition", yours: () => values.paymentCondition === "G1" ? "G1 (Pay on approval)" : values.paymentCondition || "—", expected: "G1", check: () => values.paymentCondition === "G1" },
   ];
 
   const details = checks.map((c) => ({
     field: c.field,
     correct: c.check(),
-    yours: values[c.field] || "—",
+    yours: c.yours(),
     expected: c.expected,
   }));
 

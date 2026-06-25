@@ -41,6 +41,15 @@ const INITIAL_VALUES: Record<string, string> = {
   paymentCondition: "",
 };
 
+const SCOREABLE_FIELDS = [
+  "messageType", "declarationType", "importerUEN", "placeOfReleaseFTZ",
+  "placeOfReceiptOthers", "hsCode", "hsQuantity", "hsUnit",
+  "packingOuter", "packingOuterUnit", "packingInner", "packingInnerUnit",
+  "cargoPackingType", "transportMode", "invoiceCurrency", "exchangeRate",
+  "cifValue", "freight", "insurance", "grossWeight", "grossWeightUnit",
+  "paymentCondition",
+];
+
 export function BeatA() {
   const [values, setValues] = useState<Record<string, string>>(INITIAL_VALUES);
   const [scaffolding, setScaffolding] = useState<ScaffoldingLevel>(1);
@@ -52,11 +61,19 @@ export function BeatA() {
   const [score, setScore] = useState<ScoringResult | null>(null);
   const [showCaseFile, setShowCaseFile] = useState(false);
   const [showStamp, setShowStamp] = useState(false);
+  const [touched, setTouched] = useState<Set<string>>(new Set());
 
   const msgType = values.messageType as MessageType | "";
 
+  const filledCount = SCOREABLE_FIELDS.filter(
+    (f) => values[f] && values[f] !== ""
+  ).length;
+  const totalFields = SCOREABLE_FIELDS.length;
+  const progressPct = Math.round((filledCount / totalFields) * 100);
+
   const setValue = useCallback(
     (field: string, value: string) => {
+      setTouched((prev) => new Set(prev).add(field));
       setValues((prev) => {
         const next = { ...prev, [field]: value };
         if (field === "messageType") {
@@ -90,8 +107,18 @@ export function BeatA() {
       const result = scorePermit(values);
       setScore(result);
       setSubmitted(true);
-    }, 600);
+    }, 1200);
   }, [values, scaffolding]);
+
+  const handleRetry = useCallback(() => {
+    setValues(INITIAL_VALUES);
+    setErrors([]);
+    setErrorLedger([]);
+    setSubmitted(false);
+    setScore(null);
+    setShowStamp(false);
+    setTouched(new Set());
+  }, []);
 
   const hardErrors = errors.filter((e) => e.severity === "hard");
   const isStampable = hardErrors.length === 0 && msgType !== "";
@@ -128,24 +155,33 @@ export function BeatA() {
           </h1>
         </header>
 
-        <div className="flex-1 overflow-auto p-3 sm:p-6">
+        <div className="flex-1 overflow-auto p-3 sm:p-6 animate-stamp-flash">
           <div className="max-w-2xl mx-auto">
             {showStamp && (
               <div className="text-center mb-6">
-                <div className="inline-block border-4 border-customs-red rounded-lg px-6 py-3 animate-stamp">
-                  <span className="text-customs-red font-bold text-2xl tracking-wider">
+                <div className="inline-block border-4 border-customs-red rounded-lg px-8 py-4 animate-stamp shadow-lg shadow-customs-red/20">
+                  <span className="text-customs-red font-bold text-3xl tracking-widest">
                     STAMPED
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="bg-customs-panel border border-customs-gold/30 rounded-xl p-4 sm:p-6 mb-4">
-              <h2 className="text-customs-gold text-xl font-bold text-center mb-4">
+            <div className="bg-customs-panel border border-customs-gold/30 rounded-xl p-4 sm:p-6 mb-4 animate-score-reveal">
+              <h2 className="text-customs-gold text-xl font-bold text-center mb-2">
                 Faithfulness: {Math.round((score.total / score.max) * 100)}%
               </h2>
-              <p className="text-center text-customs-muted text-sm mb-4">
+              <p className="text-center text-customs-muted text-sm mb-1">
                 {score.total} of {score.max} fields correct
+              </p>
+              <p className="text-center text-xs mb-4">
+                {score.total === score.max ? (
+                  <span className="text-customs-green font-bold">Perfect declaration!</span>
+                ) : score.total >= score.max * 0.8 ? (
+                  <span className="text-customs-gold">Good work — review the red fields below.</span>
+                ) : (
+                  <span className="text-customs-amber">Review the case file and try again.</span>
+                )}
               </p>
 
               <div className="space-y-1">
@@ -160,9 +196,9 @@ export function BeatA() {
                   >
                     <span className="text-white font-medium">{d.field}</span>
                     <div className="flex items-center gap-2 text-right">
-                      {!d.correct && (
+                      {!d.correct && d.yours !== "—" && (
                         <span className="text-customs-red line-through">
-                          {d.yours || "—"}
+                          {d.yours}
                         </span>
                       )}
                       <span
@@ -170,7 +206,7 @@ export function BeatA() {
                           d.correct ? "text-customs-green" : "text-customs-gold"
                         }
                       >
-                        {d.expected}
+                        {d.correct ? d.yours : d.expected}
                       </span>
                     </div>
                   </div>
@@ -205,12 +241,20 @@ export function BeatA() {
               Exports Act (Cap 272A).
             </div>
 
-            <Link
-              to="/"
-              className="block bg-customs-gold text-customs-dark font-bold py-2.5 rounded-lg no-underline hover:bg-customs-gold/90 transition-colors text-center"
-            >
-              RETURN
-            </Link>
+            <div className="flex gap-3">
+              <button
+                onClick={handleRetry}
+                className="flex-1 bg-customs-surface border border-customs-gold text-customs-gold font-bold py-2.5 rounded-lg hover:bg-customs-gold/10 transition-colors cursor-pointer"
+              >
+                TRY AGAIN
+              </button>
+              <Link
+                to="/"
+                className="flex-1 bg-customs-gold text-customs-dark font-bold py-2.5 rounded-lg no-underline hover:bg-customs-gold/90 transition-colors text-center"
+              >
+                RETURN
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -256,6 +300,26 @@ export function BeatA() {
           </button>
         </div>
       </header>
+
+      {/* Progress bar */}
+      {msgType && (
+        <div className="bg-customs-navy px-3 sm:px-6 py-1.5 border-b border-customs-border flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-customs-muted whitespace-nowrap">
+              {filledCount}/{totalFields} fields
+            </span>
+            <div className="flex-1 h-1.5 bg-customs-surface rounded-full overflow-hidden">
+              <div
+                className="h-full bg-customs-gold rounded-full transition-all duration-300"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+            <span className="text-[10px] text-customs-gold font-bold">
+              {progressPct}%
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Main content */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
@@ -650,12 +714,12 @@ export function BeatA() {
             {/* Submit button */}
             {msgType && (
               <div className="pb-6">
-                {errors.length > 0 && (
+                {errors.filter((e) => touched.has(e.field)).length > 0 && (
                   <div className="mb-3 bg-customs-panel border border-customs-border rounded-lg p-3">
                     <h4 className="text-xs text-customs-amber font-bold mb-2">
                       Validation Issues
                     </h4>
-                    {errors.map((e, i) => (
+                    {errors.filter((e) => touched.has(e.field)).map((e, i) => (
                       <div
                         key={i}
                         className={`text-xs p-1.5 rounded mb-1 ${
@@ -664,6 +728,7 @@ export function BeatA() {
                             : "bg-customs-amber/10 text-customs-amber"
                         }`}
                       >
+                        <span className="font-mono text-[10px] opacity-70">[{e.code}]</span>{" "}
                         {e.message}
                       </div>
                     ))}
