@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { CASE_038 } from "../../data/case038";
+import {
+  CopyableValue,
+  DocumentHeader,
+  DocumentField,
+  DocumentSection,
+  DocumentParty,
+  DocumentWrapper,
+} from "./DocumentStyles";
 
 type Tab = "invoice" | "packing" | "bl";
 
@@ -12,9 +20,10 @@ export function CaseFilePanel038() {
   return (
     <div className="bg-customs-panel border border-customs-border rounded-xl overflow-hidden h-full flex flex-col">
       <div className="bg-customs-surface px-3 py-2 flex items-center gap-2 border-b border-customs-border flex-shrink-0">
-        <span className="text-xs text-customs-gold font-bold uppercase tracking-wider">
+        <span className="text-xs text-customs-gold font-bold uppercase tracking-wider font-sans">
           Case File #038 — Transhipment
         </span>
+        <span className="text-[9px] text-customs-muted font-sans ml-auto">Click any value to copy</span>
       </div>
 
       <div className="flex border-b border-customs-border flex-shrink-0">
@@ -28,7 +37,7 @@ export function CaseFilePanel038() {
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`flex-1 py-2 text-xs font-medium border-b-2 cursor-pointer bg-transparent ${
+            className={`flex-1 py-2 text-xs font-medium border-b-2 cursor-pointer bg-transparent font-sans ${
               tab === key
                 ? "border-customs-gold text-customs-gold"
                 : "border-transparent text-customs-muted hover:text-white"
@@ -39,170 +48,149 @@ export function CaseFilePanel038() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-auto p-3 text-xs font-mono">
+      <div className="flex-1 overflow-auto p-3">
         {tab === "invoice" && (
-          <div className="space-y-2 text-customs-muted">
-            <div className="border border-customs-border rounded p-2">
-              <p className="text-customs-gold font-bold text-center mb-2">COMMERCIAL INVOICE</p>
-              <div className="space-y-1">
-                <p><span className="text-customs-muted">Seller:</span> <span className="text-white">{inv.seller}</span></p>
-                <p className="text-[10px]">{inv.sellerAddress}</p>
-                <p className="text-[10px]">BRN: {inv.sellerBRN}</p>
-                <hr className="border-customs-border my-1" />
-                <p><span className="text-customs-muted">Buyer (Final):</span> <span className="text-white">{inv.buyer}</span></p>
-                <p className="text-[10px]">{inv.buyerAddress}</p>
-                <hr className="border-customs-border my-1" />
-                <p><span className="text-customs-muted">Through Agent (SG):</span> <span className="text-white">{inv.throughAgent}</span></p>
-                <p className="text-[10px]">{inv.throughAgentAddress}</p>
-                <p className="text-[10px]">UEN: {inv.throughAgentUEN}</p>
-                <hr className="border-customs-border my-1" />
-                <div className="grid grid-cols-2 gap-1 text-[10px]">
-                  <p>Invoice No.: {inv.invoiceNo}</p>
-                  <p>Date: {inv.invoiceDate}</p>
-                  <p>B/L No.: {inv.blNo}</p>
-                  <p>INCOTERM: {inv.incoterm}</p>
-                </div>
-              </div>
-            </div>
+          <DocumentWrapper>
+            <DocumentHeader
+              title="Commercial Invoice"
+              subtitle="Transhipment — OLED Panels (Korea to Indonesia via SG)"
+              documentNo={inv.invoiceNo}
+            />
 
-            <div className="border border-customs-border rounded p-2">
-              <table className="w-full text-[10px]">
-                <thead>
-                  <tr className="text-customs-gold">
-                    <th className="text-left">Description</th>
-                    <th className="text-right">Qty</th>
-                    <th className="text-right">Unit (KRW)</th>
-                    <th className="text-right">Total (KRW)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inv.lines.map((l, i) => (
-                    <tr key={i} className="text-white">
-                      <td className="py-1 pr-2 max-w-[140px] break-words">{l.description}</td>
-                      <td className="text-right">{l.qty.toLocaleString()}</td>
-                      <td className="text-right">{l.unitPrice.toLocaleString()}</td>
-                      <td className="text-right">{l.lineTotal.toLocaleString()}</td>
+            <DocumentParty
+              role="Seller"
+              name={inv.seller}
+              address={inv.sellerAddress}
+              id={inv.sellerBRN}
+              idLabel="BRN"
+            />
+            <DocumentParty
+              role="Buyer (Final)"
+              name={inv.buyer}
+              address={inv.buyerAddress}
+            />
+            <DocumentParty
+              role="Through Agent (SG)"
+              name={inv.throughAgent}
+              address={inv.throughAgentAddress}
+              id={inv.throughAgentUEN}
+              idLabel="UEN"
+            />
+
+            <DocumentSection title="References">
+              <DocumentField label="Invoice No." value={inv.invoiceNo} mono />
+              <DocumentField label="Date" value={inv.invoiceDate} />
+              <DocumentField label="B/L No." value={inv.blNo} mono />
+              <DocumentField label="Incoterm" value={inv.incoterm} highlight />
+            </DocumentSection>
+
+            <DocumentSection title="Line Items">
+              <div className="overflow-x-auto">
+                <table className="w-full text-[10px] font-sans">
+                  <thead>
+                    <tr className="border-b border-customs-border/50">
+                      <th className="text-left py-1.5 text-customs-muted font-medium uppercase text-[9px] tracking-wider">Description</th>
+                      <th className="text-right py-1.5 text-customs-muted font-medium uppercase text-[9px] tracking-wider">Qty</th>
+                      <th className="text-right py-1.5 text-customs-muted font-medium uppercase text-[9px] tracking-wider">Unit (KRW)</th>
+                      <th className="text-right py-1.5 text-customs-muted font-medium uppercase text-[9px] tracking-wider">Total (KRW)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {inv.lines.map((l, i) => (
+                      <tr key={i} className="border-b border-customs-border/20">
+                        <td className="py-2 pr-2 max-w-[160px] text-white font-sans text-[10px] leading-tight">
+                          {l.description}
+                        </td>
+                        <td className="text-right py-2 font-mono text-white">
+                          <CopyableValue value={l.qty.toLocaleString()} className="text-white font-mono text-[10px]" />
+                        </td>
+                        <td className="text-right py-2 font-mono text-white">
+                          <CopyableValue value={l.unitPrice.toLocaleString()} className="text-white font-mono text-[10px]" />
+                        </td>
+                        <td className="text-right py-2 font-mono text-white">
+                          <CopyableValue value={l.lineTotal.toLocaleString()} className="text-white font-mono text-[10px]" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </DocumentSection>
 
-            <div className="border border-customs-border rounded p-2 space-y-1 text-[10px]">
-              <div className="flex justify-between">
-                <span>FOB Value (Busan)</span>
-                <span className="text-white">KRW {inv.fobValue.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Ocean Freight (Busan &rarr; SGP)</span>
-                <span className="text-white">KRW {inv.oceanFreight.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Marine Insurance</span>
-                <span className="text-white">KRW {inv.marineInsurance.toLocaleString()}</span>
-              </div>
-              <hr className="border-customs-border" />
-              <div className="flex justify-between font-bold">
-                <span className="text-customs-gold">CIF Value (Singapore)</span>
-                <span className="text-white">KRW {inv.cifValue.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-[9px]">
-                <span>Exchange Rate</span>
-                <span className="text-white">KRW 1 = SGD {inv.exchangeRate}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span className="text-customs-gold">CIF Value in SGD</span>
-                <span className="text-white">SGD {inv.cifValueSGD.toLocaleString()}</span>
-              </div>
-              <hr className="border-customs-border" />
-              <p>Country of Origin: {inv.countryOfOrigin}</p>
-              <p>Total Gross Weight: {inv.totalGrossWeight}</p>
-              <p>Total Net Weight: {inv.totalNetWeight}</p>
-              <p>Total Packages: {inv.totalPackages}</p>
-              <hr className="border-customs-border" />
-              <p className="text-customs-amber">Onward Destination: {inv.portOnward}</p>
+            <DocumentSection title="Valuation">
+              <DocumentField label="FOB Value (Busan)" value={`KRW ${inv.fobValue.toLocaleString()}`} mono />
+              <DocumentField label="Ocean Freight" value={`KRW ${inv.oceanFreight.toLocaleString()}`} mono />
+              <DocumentField label="Marine Insurance" value={`KRW ${inv.marineInsurance.toLocaleString()}`} mono />
+              <div className="h-px bg-customs-border/30 my-1" />
+              <DocumentField label="CIF Value (Singapore)" value={`KRW ${inv.cifValue.toLocaleString()}`} highlight mono />
+              <DocumentField label="Exchange Rate" value={`KRW 1 = SGD ${inv.exchangeRate}`} mono />
+              <DocumentField label="CIF Value in SGD" value={`SGD ${inv.cifValueSGD.toLocaleString()}`} highlight mono />
+            </DocumentSection>
+
+            <DocumentSection title="Shipment Details">
+              <DocumentField label="Country of Origin" value={inv.countryOfOrigin} />
+              <DocumentField label="Gross Weight" value={inv.totalGrossWeight} />
+              <DocumentField label="Net Weight" value={inv.totalNetWeight} />
+              <DocumentField label="Total Packages" value={inv.totalPackages} />
+            </DocumentSection>
+
+            <div className="mt-2 p-2 bg-customs-amber/10 border border-customs-amber/30 rounded">
+              <DocumentField label="Onward Destination" value={inv.portOnward} highlight />
             </div>
-          </div>
+          </DocumentWrapper>
         )}
 
         {tab === "packing" && (
-          <div className="border border-customs-border rounded p-3 space-y-3">
-            <p className="text-customs-gold font-bold text-center mb-2">PACKING LIST</p>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center p-2 bg-customs-surface rounded">
-                <span className="text-customs-muted">Outer packaging:</span>
-                <span className="text-white font-bold">{pl.outerPack}</span>
-              </div>
-              <div className="flex justify-between items-center p-2 bg-customs-surface rounded">
-                <span className="text-customs-muted">Inner packaging:</span>
-                <span className="text-white font-bold">{pl.innerPack}</span>
-              </div>
-              <div className="flex justify-between items-center p-2 bg-customs-surface rounded border border-customs-gold/30">
-                <span className="text-customs-gold">Total quantity:</span>
-                <span className="text-white font-bold">{pl.totalPanels}</span>
-              </div>
-            </div>
-            <p className="text-[10px] text-customs-muted mt-2 italic">
+          <DocumentWrapper>
+            <DocumentHeader
+              title="Packing List"
+              subtitle="Samsung OLED Display Panels"
+            />
+
+            <DocumentSection title="Packaging Details">
+              <DocumentField label="Outer Packaging" value={pl.outerPack} highlight mono />
+              <DocumentField label="Inner Packaging" value={pl.innerPack} mono />
+              <DocumentField label="Total Quantity" value={pl.totalPanels} highlight mono />
+            </DocumentSection>
+
+            <div className="mt-3 p-2 bg-customs-gold/5 border border-customs-gold/20 rounded text-[10px] text-customs-muted font-sans italic">
               Electronics packed in crates. Non-dutiable goods.
-            </p>
-          </div>
+            </div>
+          </DocumentWrapper>
         )}
 
         {tab === "bl" && (
-          <div className="border border-customs-border rounded p-3 space-y-3">
-            <p className="text-customs-gold font-bold text-center mb-2">BILL OF LADING</p>
-            <div className="space-y-1.5">
-              <div className="flex justify-between">
-                <span className="text-customs-muted">Inward Vessel:</span>
-                <span className="text-white">{bl.vesselInward}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-customs-muted">Inward Voyage:</span>
-                <span className="text-white">{bl.voyageInward}</span>
-              </div>
-              <hr className="border-customs-border" />
-              <div className="flex justify-between">
-                <span className="text-customs-muted">Port of Loading:</span>
-                <span className="text-white">{bl.portOfLoading}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-customs-muted">Port of Discharge:</span>
-                <span className="text-white">{bl.portOfDischarge}</span>
-              </div>
-              <hr className="border-customs-border" />
-              <div className="p-1.5 bg-customs-amber/10 border border-customs-amber/20 rounded">
-                <div className="flex justify-between">
-                  <span className="text-customs-amber">Onward Vessel:</span>
-                  <span className="text-white font-bold">{bl.vesselOnward}</span>
-                </div>
-                <div className="flex justify-between mt-1">
-                  <span className="text-customs-amber">Onward Port:</span>
-                  <span className="text-white">{bl.portOnward}</span>
-                </div>
-              </div>
-              <hr className="border-customs-border" />
-              <div className="flex justify-between p-1.5 bg-customs-surface rounded">
-                <span className="text-customs-muted">Mode:</span>
-                <span className="text-white font-bold">{bl.mode}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-customs-muted">B/L No.:</span>
-                <span className="text-white font-mono text-[10px]">{bl.blNo}</span>
-              </div>
-              <div className="flex justify-between p-1.5 bg-customs-surface rounded">
-                <span className="text-customs-muted">Container No.:</span>
-                <span className="text-white font-mono text-[10px]">{bl.containerNo}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-customs-muted">Container Type:</span>
-                <span className="text-white">{bl.containerType}</span>
-              </div>
-              <div className="flex justify-between p-1.5 bg-customs-surface rounded border border-customs-gold/30">
-                <span className="text-customs-gold">Gross Weight:</span>
-                <span className="text-white font-bold">{bl.grossWeight}</span>
-              </div>
+          <DocumentWrapper>
+            <DocumentHeader
+              title="Bill of Lading"
+              subtitle="Ocean Transport — Busan to Singapore (Transhipment)"
+              documentNo={bl.blNo}
+            />
+
+            <DocumentSection title="Inward Vessel">
+              <DocumentField label="Vessel" value={bl.vesselInward} />
+              <DocumentField label="Voyage" value={bl.voyageInward} mono />
+            </DocumentSection>
+
+            <DocumentSection title="Route">
+              <DocumentField label="Port of Loading" value={bl.portOfLoading} />
+              <DocumentField label="Port of Discharge" value={bl.portOfDischarge} />
+            </DocumentSection>
+
+            <div className="my-2 p-2 bg-customs-amber/10 border border-customs-amber/30 rounded">
+              <p className="text-[9px] text-customs-amber font-sans font-semibold uppercase tracking-widest mb-1">Onward Routing</p>
+              <DocumentField label="Onward Vessel" value={bl.vesselOnward} />
+              <DocumentField label="Onward Port" value={bl.portOnward} highlight />
             </div>
-          </div>
+
+            <DocumentSection title="Cargo Details">
+              <DocumentField label="Transport Mode" value={bl.mode} highlight />
+              <DocumentField label="B/L Number" value={bl.blNo} mono highlight />
+              <DocumentField label="Container No." value={bl.containerNo} mono />
+              <DocumentField label="Container Type" value={bl.containerType} />
+              <DocumentField label="Gross Weight" value={bl.grossWeight} highlight mono />
+            </DocumentSection>
+          </DocumentWrapper>
         )}
       </div>
     </div>
