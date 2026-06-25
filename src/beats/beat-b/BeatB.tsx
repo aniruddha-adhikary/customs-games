@@ -317,7 +317,7 @@ export function BeatB() {
               },
               {
                 label: "FTZ",
-                sub: "Changi",
+                sub: "Tanjong Pagar",
                 icon: "\u2693",
                 leg: 1 as const,
               },
@@ -422,7 +422,7 @@ export function BeatB() {
             <div className="flex-1 flex items-center justify-center">
               <div className="bg-customs-panel border border-customs-green/30 rounded-xl p-6 sm:p-8 text-center max-w-md animate-fade-in">
                 <p className="text-customs-green text-lg font-medium mb-2">
-                  {"\u{1F6A2}"} Ship arriving at Changi FTZ...
+                  {"\u{1F6A2}"} Ship arriving at Tanjong Pagar FTZ...
                 </p>
                 <p className="text-customs-muted text-sm mt-2">
                   Gate 1 opens automatically for this leg.
