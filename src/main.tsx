@@ -9,6 +9,9 @@ import { BeatC } from "./beats/beat-c/BeatC";
 import { BeatA038 } from "./beats/beat-a/BeatA038";
 import { BeatB038 } from "./beats/beat-b/BeatB038";
 import { BeatC038 } from "./beats/beat-c/BeatC038";
+import { BeatA052 } from "./beats/beat-a/BeatA052";
+import { BeatB052 } from "./beats/beat-b/BeatB052";
+import { BeatC052 } from "./beats/beat-c/BeatC052";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +24,9 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/case-038/beat-a" element={<BeatA038 />} />
         <Route path="/case-038/beat-b" element={<BeatB038 />} />
         <Route path="/case-038/beat-c" element={<BeatC038 />} />
+        <Route path="/case-052/beat-a" element={<BeatA052 />} />
+        <Route path="/case-052/beat-b" element={<BeatB052 />} />
+        <Route path="/case-052/beat-c" element={<BeatC052 />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
