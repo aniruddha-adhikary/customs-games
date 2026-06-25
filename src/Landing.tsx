@@ -65,6 +65,48 @@ const CASES: CaseConfig[] = [
     ],
   },
   {
+    id: "case-025",
+    title: "Case #025",
+    subtitle: "Apple MacBook Pro Import",
+    tag: "IN \u2014 Non-dutiable",
+    basePath: "/case-025",
+    beats: [
+      {
+        id: "beat-b",
+        title: "Beat B",
+        subtitle: "Goods Journey",
+        duration: "~10 min",
+        description:
+          "Route MacBook Pro laptops via air freight through Changi FTZ to clearance.",
+        icon: "\u2708\uFE0F",
+        color: "from-blue-600 to-cyan-600",
+        order: "Opening Beat",
+      },
+      {
+        id: "beat-a",
+        title: "Beat A",
+        subtitle: "Declaration Desk",
+        duration: "~20 min",
+        description:
+          "CIF valuation, air freight mode, non-dutiable GF payment \u2014 different traps from dutiable imports.",
+        icon: "\u{1F4CB}",
+        color: "from-amber-600 to-orange-600",
+        order: "Spine Beat",
+      },
+      {
+        id: "beat-c",
+        title: "Beat C",
+        subtitle: "Dispatcher",
+        duration: "~12 min",
+        description:
+          "Four permits including a healthy non-dutiable import. Know when to monitor vs act.",
+        icon: "\u23F1\uFE0F",
+        color: "from-red-600 to-rose-600",
+        order: "Finale Beat",
+      },
+    ],
+  },
+  {
     id: "case-038",
     title: "Case #038",
     subtitle: "Samsung OLED Transhipment",
