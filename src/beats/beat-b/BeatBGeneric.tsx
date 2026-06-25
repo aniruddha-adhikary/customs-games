@@ -534,6 +534,12 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                     {"\u2B50"} First try!
                   </p>
                 )}
+                {config.gate2ProcedureNote && (
+                  <div className="mt-3 bg-customs-surface/50 border border-customs-gold/20 rounded-lg p-3">
+                    <p className="text-customs-gold text-xs font-medium uppercase tracking-wider mb-1">{"\u{1F4CB}"} Procedure</p>
+                    <p className="text-customs-muted text-xs leading-relaxed">{config.gate2ProcedureNote}</p>
+                  </div>
+                )}
                 <p className="text-customs-muted text-sm mt-2">
                   {state === "LEG2_ANIMATING"
                     ? config.gate2MovingText
@@ -552,12 +558,12 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                 <p className="text-customs-muted text-sm mb-4">
                   {config.gate3Description}
                 </p>
-                <div className="flex gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {config.gate3Options.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => setGate3Choice(opt.value)}
-                      className={`flex-1 py-3 rounded-lg border font-bold transition-colors cursor-pointer ${
+                      className={`py-3 px-3 rounded-lg border text-sm font-bold transition-colors cursor-pointer text-left ${
                         gate3Choice === opt.value
                           ? opt.value !== config.gate3CorrectValue
                             ? "border-customs-red/60 bg-customs-red/10 text-customs-red"
@@ -571,7 +577,7 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                 </div>
                 {gate3Choice && gate3Choice !== config.gate3CorrectValue && (
                   <p className="text-customs-amber text-sm mt-3 animate-fade-in">
-                    {"\u26A0\uFE0F"} {config.gate3WrongFeedback}
+                    {"\u26A0\uFE0F"} {config.gate3Options.find(o => o.value === gate3Choice)?.wrongFeedback || config.gate3WrongFeedback}
                   </p>
                 )}
                 <button
@@ -587,7 +593,7 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                     ? config.gate3WrongButtonText
                     : gate3Choice === config.gate3CorrectValue
                       ? "CONFIRM"
-                      : "SELECT A DIRECTION"}
+                      : "SELECT AN ANSWER"}
                 </button>
               </div>
             </div>
@@ -687,6 +693,12 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                     </div>
                   )}
                 </div>
+                {config.completionProcedureNote && (
+                  <div className="mt-4 bg-customs-surface/50 border border-customs-gold/20 rounded-lg p-3 text-left">
+                    <p className="text-customs-gold text-xs font-medium uppercase tracking-wider mb-1">{"\u{1F4CB}"} Real-World Procedure</p>
+                    <p className="text-customs-muted text-xs leading-relaxed">{config.completionProcedureNote}</p>
+                  </div>
+                )}
                 <div className="mt-6 space-y-2">
                   <button
                     onClick={handleReplay}
