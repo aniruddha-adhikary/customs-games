@@ -6,6 +6,7 @@ import {
   type MessageType,
 } from "../../data/case014";
 import type { BeatBConfig } from "./beatBConfig";
+import { SingaporeMap } from "./SingaporeMap";
 
 type BeatState =
   | "INTRO"
@@ -258,13 +259,19 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
       </header>
 
       <div className="flex-1 flex flex-col overflow-auto">
-        {/* Journey Map */}
-        <div className="bg-customs-panel border-b border-customs-border p-3 sm:p-4 flex-shrink-0">
-          <div className="flex items-center justify-between max-w-3xl mx-auto gap-1 sm:gap-2">
+        {/* Singapore FTZ Map */}
+        <div className="bg-customs-panel border-b border-customs-border flex-shrink-0">
+          <SingaporeMap
+            mapConfig={config.sgMapConfig}
+            legProgress={legProgress}
+            compact={state === "INTRO"}
+          />
+          {/* Compact node progress bar */}
+          <div className="flex items-center justify-center gap-1 sm:gap-2 px-3 pb-2 max-w-3xl mx-auto">
             {config.mapNodes.map((node, i) => (
               <div key={node.label} className="flex items-center flex-1">
                 <div
-                  className={`flex flex-col items-center p-2 sm:p-3 rounded-lg border text-center flex-shrink-0 w-16 sm:w-24 transition-all duration-500 ${
+                  className={`flex items-center gap-1 px-2 py-1 rounded border text-center flex-shrink-0 transition-all duration-500 ${
                     i === 0 ||
                     legProgress((i || 1) as 1 | 2 | 3) === "done"
                       ? "border-customs-green/50 bg-customs-green/10"
@@ -273,39 +280,25 @@ export function BeatBGeneric({ config }: { config: BeatBConfig }) {
                         : "border-customs-border bg-customs-surface"
                   }`}
                 >
-                  <span className="text-lg sm:text-2xl">{node.icon}</span>
-                  <span className="text-[10px] sm:text-xs font-bold text-white mt-1">
-                    {node.label}
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] text-customs-muted">
-                    {node.sub}
-                  </span>
+                  <span className="text-sm">{node.icon}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-white leading-tight">
+                      {node.label}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-customs-muted leading-tight">
+                      {node.sub}
+                    </span>
+                  </div>
                 </div>
                 {i < 3 && (
-                  <div className="flex-1 flex items-center justify-center mx-1">
-                    <div
-                      className={`h-0.5 flex-1 transition-colors duration-500 ${
-                        legProgress((i + 1) as 1 | 2 | 3) === "done"
-                          ? "bg-customs-green"
-                          : legProgress((i + 1) as 1 | 2 | 3) === "animating"
-                            ? "bg-customs-amber"
-                            : "bg-customs-border"
-                      }`}
-                    />
-                    <span className="mx-1 text-sm">
+                  <div className="flex items-center mx-0.5 sm:mx-1">
+                    <span className="text-xs text-customs-muted">
                       {legProgress((i + 1) as 1 | 2 | 3) === "done"
-                        ? "\u{1F513}"
+                        ? "\u2192"
                         : legProgress((i + 1) as 1 | 2 | 3) === "animating"
                           ? config.legTransportIcons[i]
-                          : "\u{1F512}"}
+                          : "\u00B7"}
                     </span>
-                    <div
-                      className={`h-0.5 flex-1 transition-colors duration-500 ${
-                        legProgress((i + 1) as 1 | 2 | 3) === "done"
-                          ? "bg-customs-green"
-                          : "bg-customs-border"
-                      }`}
-                    />
                   </div>
                 )}
               </div>
