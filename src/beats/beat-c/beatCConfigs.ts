@@ -169,7 +169,7 @@ function c025Action(permitId: string): (action: ActionType, ctx: ActionContext) 
 
 export const BEAT_C_025: BeatCConfig = {
   caseId: "025",
-  backLink: "/case-025",
+  backLink: "/",
   headerTitle: "CASE #025",
   briefingSubtitle: "Case #025: Apple MacBook Import",
   briefingStartTime: "23:41:07",

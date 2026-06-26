@@ -384,7 +384,7 @@ function scorePermit025(values: Record<string, string>): ScoringResult {
 
 export const BEAT_A_025: BeatAConfig = {
   caseId: "025",
-  backLink: "/case-025",
+  backLink: "/",
   headerTitle: "CASE #025",
   introText: "You are a Declaring Agent submitting a TradeNet permit for Case #025 (MacBook Pro import). Once approved, a CCP with payment condition GF (GIRO) will be issued.",
   introSubtext: "Non-dutiable goods: only 9% GST applies, auto-deducted via GIRO. Start by selecting Message Type.",
