@@ -31,12 +31,12 @@ export const CASE_014 = {
 
   canonicalPermit: {
     messageType: "IN" as const,
-    declarationType: "APS",
+    declarationType: "DNG",
     importerUEN: "201835672K",
     declaringAgentUEN: "199804321D",
     supplier: "Chateau Merlande, France",
-    placeOfRelease: "T15",
-    placeOfReleaseLabel: "Tanjong Pagar Terminal FTZ",
+    placeOfRelease: "PP1",
+    placeOfReleaseLabel: "Pasir Panjang Terminal FTZ",
     placeOfReceipt: "Others",
     hsCode: "2204.21",
     hsQuantity: 900.0,

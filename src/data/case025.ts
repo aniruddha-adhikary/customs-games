@@ -28,7 +28,7 @@ export const CASE_025 = {
 
   canonicalPermit: {
     messageType: "IN" as const,
-    declarationType: "APS",
+    declarationType: "GST",
     importerUEN: "200412345D",
     declaringAgentUEN: "199804321D",
     supplier: "Apple Inc, USA",
