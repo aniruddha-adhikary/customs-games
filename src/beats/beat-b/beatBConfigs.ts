@@ -1,4 +1,59 @@
+import type { SingaporeMapConfig } from "./SingaporeMap";
 import type { BeatBConfig } from "./beatBConfig";
+
+// --- Map configs for each case ---
+
+const MAP_014: SingaporeMapConfig = {
+  routeLocations: [
+    { id: "origin-france", x: 268, y: 485, label: "France", shortLabel: "FRANCE", type: "origin" },
+    { id: "ftz-pp", x: 268, y: 347, label: "Pasir Panjang FTZ (PP1)", shortLabel: "PP1", type: "ftz" },
+    { id: "lw-pp", x: 195, y: 370, label: "Licensed Warehouse (LW)", shortLabel: "LW", type: "lw" },
+    { id: "dest-sg", x: 430, y: 250, label: "Consignee (Singapore)", shortLabel: "DELIVERED", type: "destination" },
+  ],
+  routeSegments: [
+    { from: "origin-france", to: "ftz-pp", transportIcon: "\u{1F6A2}", legIndex: 1 },
+    { from: "ftz-pp", to: "dest-sg", transportIcon: "\u{1F69B}", legIndex: 2 },
+  ],
+};
+
+const MAP_025: SingaporeMapConfig = {
+  routeLocations: [
+    { id: "origin-usa", x: 770, y: 170, label: "USA", shortLabel: "USA", type: "origin" },
+    { id: "ftz-changi", x: 629, y: 224, label: "Changi Airfreight (C01)", shortLabel: "C01", type: "ftz" },
+    { id: "zgs-changi", x: 570, y: 270, label: "Zero-GST Warehouse", shortLabel: "ZGS", type: "zgs" },
+    { id: "dest-sg", x: 430, y: 250, label: "Consignee (Singapore)", shortLabel: "DELIVERED", type: "destination" },
+  ],
+  routeSegments: [
+    { from: "origin-usa", to: "ftz-changi", transportIcon: "\u2708\uFE0F", legIndex: 1 },
+    { from: "ftz-changi", to: "dest-sg", transportIcon: "\u{1F69B}", legIndex: 2 },
+  ],
+};
+
+const MAP_038: SingaporeMapConfig = {
+  routeLocations: [
+    { id: "origin-korea", x: 268, y: 485, label: "South Korea", shortLabel: "KOREA", type: "origin" },
+    { id: "ftz-pp", x: 268, y: 347, label: "Pasir Panjang FTZ (PP1)", shortLabel: "PP1", type: "ftz" },
+    { id: "ftz-jurong", x: 174, y: 275, label: "Jurong Port (JZ)", shortLabel: "JZ", type: "ftz" },
+    { id: "dest-jakarta", x: 100, y: 485, label: "Jakarta", shortLabel: "JAKARTA", type: "destination" },
+  ],
+  routeSegments: [
+    { from: "origin-korea", to: "ftz-pp", transportIcon: "\u{1F6A2}", legIndex: 1 },
+    { from: "ftz-pp", to: "ftz-jurong", transportIcon: "\u{1F69B}", legIndex: 2 },
+    { from: "ftz-jurong", to: "dest-jakarta", transportIcon: "\u{1F6A2}", legIndex: 3 },
+  ],
+};
+
+const MAP_052: SingaporeMapConfig = {
+  routeLocations: [
+    { id: "factory-sg", x: 380, y: 245, label: "NanoOptics Factory", shortLabel: "FACTORY", type: "factory" },
+    { id: "ftz-keppel", x: 380, y: 352, label: "Keppel Terminal", shortLabel: "KEP", type: "ftz" },
+    { id: "dest-germany", x: 380, y: 485, label: "Germany", shortLabel: "GERMANY", type: "destination" },
+  ],
+  routeSegments: [
+    { from: "factory-sg", to: "ftz-keppel", transportIcon: "\u{1F69B}", legIndex: 1 },
+    { from: "ftz-keppel", to: "dest-germany", transportIcon: "\u{1F6A2}", legIndex: 2 },
+  ],
+};
 
 export const BEAT_B_014: BeatBConfig = {
   caseId: "014",
@@ -119,6 +174,8 @@ export const BEAT_B_014: BeatBConfig = {
   rulebookContent: "standard",
   rulebookKeyPrinciple:
     "Dutiable goods (liquor, tobacco, petroleum, motor vehicles) require payment of duty/GST before release. Under condition A1, the CCP and supporting documents (invoice, packing list, B/L) must be produced at the FTZ gate to ICA officers.",
+
+  sgMapConfig: MAP_014,
 };
 
 export const BEAT_B_025: BeatBConfig = {
@@ -238,6 +295,8 @@ export const BEAT_B_025: BeatBConfig = {
   rulebookContent: "standard",
   rulebookKeyPrinciple:
     "Non-dutiable goods still require an IN permit and payment of 9% GST. With payment condition GF, GST is deducted automatically via GIRO from the importer\u2019s bank account \u2014 no manual payment at UOB needed. CCP + trade documents must still be presented at the FTZ gate.",
+
+  sgMapConfig: MAP_025,
 };
 
 export const BEAT_B_038: BeatBConfig = {
@@ -334,6 +393,8 @@ export const BEAT_B_038: BeatBConfig = {
   rulebookContent: "transhipment",
   rulebookKeyPrinciple:
     "Goods transshipping through Singapore stay outside customs territory (no duty/GST). But if moved between FTZs by road, condition A9 (bonded truck with customs sealing) and AX (48-hour deadline) apply to prevent diversion into Singapore.",
+
+  sgMapConfig: MAP_038,
 };
 
 export const BEAT_B_052: BeatBConfig = {
@@ -454,4 +515,6 @@ export const BEAT_B_052: BeatBConfig = {
   rulebookContent: "standard",
   rulebookKeyPrinciple:
     "Exports require an OUT permit submitted via TradeNet before vessel departure. The CCP and supporting documents (invoice, packing list) must be presented at the port gate to authorise loading. Singapore has no export duties, but permits are mandatory for trade compliance and statistics.",
+
+  sgMapConfig: MAP_052,
 };

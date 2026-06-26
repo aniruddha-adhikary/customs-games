@@ -1,4 +1,5 @@
 import type { MessageType } from "../../data/case014";
+import type { SingaporeMapConfig } from "./SingaporeMap";
 
 export interface MapNode {
   label: string;
@@ -80,4 +81,7 @@ export interface BeatBConfig {
 
   rulebookContent: "standard" | "transhipment";
   rulebookKeyPrinciple: string;
+
+  /** Singapore map config showing FTZ locations and route */
+  sgMapConfig: SingaporeMapConfig;
 }
