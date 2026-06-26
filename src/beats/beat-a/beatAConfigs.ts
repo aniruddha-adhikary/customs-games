@@ -279,10 +279,12 @@ export const BEAT_A_014: BeatAConfig = {
     { title: "Message Types", content: "IN = Import, OUT = Export, Transhipment/Movement, COO" },
     { title: "HS Code", content: "Still wine in containers \u2264 2L: 2204.21. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 2204.21 is LTR (litres), not bottles. Convert: bottles x 0.75L." },
-    { title: "Packing (Liquor)", content: "Dutiable liquor must be declared to bottle level. Outer: CTN, In-pack: BOT." },
-    { title: "Valuation (FOB)", content: "When INCOTERM = FOB, add freight + insurance to get CIF. CIF = FOB + Freight + Insurance." },
-    { title: "Gross Weight", content: "Sea = TNE (metric tonnes). Air = KGM. Convert: kg \u00F7 1000 = TNE." },
-    { title: "Payment", content: "G1 = pay at approval. GF/G7 = GIRO. GF/G7 same-day window for non-dutiable only." },
+    { title: "Packing (Liquor)", content: "Dutiable liquor must be declared to bottle level. Outer: CTN, In-pack: BOT. Cigarettes/cigars must go down to the stick (STK)." },
+    { title: "Valuation (FOB)", content: "When INCOTERM = FOB, add freight + insurance to get CIF. CIF = FOB + Freight + Insurance. Common error: omitting freight/insurance or using unit price instead of total value." },
+    { title: "Gross Weight", content: "Sea = TNE (metric tonnes). Air = KGM. For IN/TNP: weight is based on the INWARD leg. For OUT: based on OUTWARD leg." },
+    { title: "Payment", content: "G1 = pay at approval. GF/G7 = GIRO. GF/G7 same-day window for non-dutiable only. Breach of G1/GF conditions is an offence under the Customs Act." },
+    { title: "Common Errors", content: "Top errors per Singapore Customs: (1) Wrong declaration type, (2) Incorrect Place of Release/Receipt, (3) Wrong container number, (4) Incorrect UEN, (5) Wrong HS code or non-itemisation, (6) Wrong HS Qty/UOM, (7) Wrong CIF value due to incorrect currency, omitted invoices, or INCOTERM confusion." },
+    { title: "Permit Conditions", content: "Once CCP is issued, you must: present permit at FTZ checkpoint for endorsement, return Z02/Z06/Z18 documents within 48 hrs, and pay duty/GST per G1/GF condition. Failure = offence under Customs Act (Cap 70) or RIEA (Cap 272A)." },
   ],
 };
 
@@ -473,9 +475,11 @@ export const BEAT_A_025: BeatAConfig = {
     { title: "HS Code", content: "Portable data processing machines (laptops) \u2264 10kg: 8471.30. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 8471.30 is U (units). Not KGM, not PCS." },
     { title: "CIF vs FOB", content: "When INCOTERM = CIF, freight + insurance are INCLUDED. Do NOT add separately.", extra: "When INCOTERM = FOB, you must ADD freight + insurance to get CIF." },
-    { title: "Gross Weight", content: "Sea = TNE (metric tonnes). Air = KGM (kilograms)." },
-    { title: "Cargo Packing Type", content: "Sea (containers) = 9. Air (pallets) = 5 (Non-containerised)." },
+    { title: "Gross Weight", content: "Air freight = KGM (kilograms). Sea = TNE (metric tonnes). Common error: using TNE for air shipments." },
+    { title: "Cargo Packing Type", content: "Sea (containers) = 9. Air (pallets) = 5 (Non-containerised). Declaring 9 for air freight is a common mistake." },
     { title: "Payment", content: "G1 = pay at approval (dutiable goods). GF = GIRO (non-dutiable).", extra: "Laptops are NOT dutiable. Only alcohol, tobacco, motor vehicles, petroleum are dutiable." },
+    { title: "Common Errors", content: "Top errors: (1) Wrong declaration type, (2) Incorrect Place of Release/Receipt, (3) Wrong HS code, (4) Value errors from wrong currency/exchange rate, (5) Omitting freight & insurance when INCOTERM is FOB, (6) Using unit price as total value, (7) Wrong gross weight unit for transport mode." },
+    { title: "GF Amendment Rules", content: "GF/G7 (GIRO) permits for non-dutiable goods: payment-related fields (currency, freight, insurance, CIF value, importer UEN) can be amended SAME DAY ONLY (before 23:59:59). Must submit within office hours." },
   ],
 };
 
@@ -664,10 +668,12 @@ export const BEAT_A_038: BeatAConfig = {
   rulebookTitle: "Rulebook \u2014 Transhipment",
   rulebookEntries: [
     { title: "Transhipment (TSHIP)", content: "Goods passing THROUGH Singapore to another destination. They never enter Singapore's customs territory for local consumption." },
-    { title: "TTI Declaration", content: "Through Transhipment with Inward manifest \u2014 for goods arriving by sea/air and departing to final destination without entering customs territory." },
+    { title: "TTI Declaration", content: "Through Transhipment with Inter-gateway movement (TTI) \u2014 goods moving from one FTZ to another different FTZ. For same-FTZ transhipment of controlled goods, use TTF." },
     { title: "Place of Release/Receipt", content: "For transhipment, BOTH should be FTZ locations. Goods arrive at and depart from the FTZ \u2014 they never leave it." },
     { title: "No Duty/GST", content: "Transhipped goods never enter Singapore's customs territory. No duty or GST is payable. Payment condition field is hidden." },
     { title: "HS Code 9013.80", content: "Flat panel display devices (OLED). HS unit = U (units). Non-dutiable electronics component." },
+    { title: "Transhipment Types", content: "TTF = same FTZ (controlled goods only). TTI = inter-gateway (FTZ to different FTZ). IGM = inter-gateway movement pending re-export. REM = removal between licensed/ZGS warehouses. BRE = blanket removal." },
+    { title: "No Manipulation", content: "During inter-gateway movement, no manipulation of goods is allowed en route (no re-packing, sorting, or re-labeling). Goods must arrive intact at destination FTZ." },
   ],
 };
 
@@ -850,10 +856,12 @@ export const BEAT_A_052: BeatAConfig = {
   rulebookTitle: "Rulebook",
   rulebookEntries: [
     { title: "Message Types", content: "IN = Import, OUT = Export, Transhipment/Movement, COO" },
+    { title: "OUT Declaration Types", content: "DRT (Direct) = locally manufactured or GST-paid goods. APS = from LW/ZGS warehouse. BKT = blanket arrangement. TCR/TCO/TCS/TCE = temporary consignment re-export." },
     { title: "HS Code", content: "Optical lenses (other than contact/spectacle): 9001.90. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 9001.90 is U (units)." },
-    { title: "Export Valuation (FOB)", content: "For FOB exports, declare FOB value only. Freight and insurance are the buyer's cost and should NOT be added." },
-    { title: "Gross Weight", content: "Sea = TNE (metric tonnes). Air = KGM. Convert: kg \u00F7 1000 = TNE." },
-    { title: "Payment", content: "G1 = pay at approval. GF/G7 = GIRO. Exports of non-dutiable goods use GF." },
+    { title: "Export Valuation (FOB)", content: "For FOB exports, declare FOB value only. Freight and insurance are the buyer's cost and should NOT be added. Common error: including freight/insurance in export value." },
+    { title: "Place of Release/Receipt", content: "For OUT: Place of Release = where goods depart FROM (Others, Licence No, or FTZ). Place of Receipt = FTZ (where goods go for export)." },
+    { title: "Gross Weight", content: "For OUT permits: total gross weight based on OUTWARD transport leg. Sea = TNE. Air = KGM." },
+    { title: "Payment", content: "G1 = pay at approval. GF/G7 = GIRO. Exports of non-dutiable goods use GF. No duty/GST on exports (GST-free supply)." },
   ],
 };

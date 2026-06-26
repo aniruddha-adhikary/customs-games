@@ -26,6 +26,106 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Light theme overrides */
+[data-theme="light"] {
+  --color-customs-navy: #f1f5f9;
+  --color-customs-dark: #ffffff;
+  --color-customs-gold: #92700c;
+  --color-customs-green: #16a34a;
+  --color-customs-red: #dc2626;
+  --color-customs-amber: #d97706;
+  --color-customs-blue: #2563eb;
+  --color-customs-slate: #cbd5e1;
+  --color-customs-muted: #64748b;
+  --color-customs-border: #e2e8f0;
+  --color-customs-panel: #f8fafc;
+  --color-customs-surface: #f1f5f9;
+}
+
+[data-theme="light"] body {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+/* Light mode text color overrides for Tailwind utility classes */
+[data-theme="light"] .text-white {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200 {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .text-gray-100,
+[data-theme="light"] .text-gray-200 {
+  color: #374151 !important;
+}
+
+[data-theme="light"] .text-gray-300 {
+  color: #4b5563 !important;
+}
+
+[data-theme="light"] .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+/* Light mode background overrides */
+[data-theme="light"] .bg-slate-800 {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .bg-slate-700 {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .bg-slate-900 {
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .bg-gray-900 {
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .bg-gray-800 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Light mode border overrides */
+[data-theme="light"] .border-slate-600,
+[data-theme="light"] .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .border-gray-700,
+[data-theme="light"] .border-gray-600 {
+  border-color: #e5e7eb !important;
+}
+
+/* Light mode gradient text */
+[data-theme="light"] .from-amber-400 {
+  --tw-gradient-from: #92400e;
+}
+
+[data-theme="light"] .to-yellow-200 {
+  --tw-gradient-to: #78350f;
+}
+
+/* Placeholder text in light mode */
+[data-theme="light"] input::placeholder,
+[data-theme="light"] select::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
 #root {
   min-height: 100dvh;
   display: flex;
