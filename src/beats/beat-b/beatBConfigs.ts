@@ -181,7 +181,7 @@ export const BEAT_B_014: BeatBConfig = {
 export const BEAT_B_025: BeatBConfig = {
   caseId: "025",
   caseTitle: "CASE #025 \u2014 MACBOOK PRO IMPORT",
-  backLink: "/case-025",
+  backLink: "/",
 
   mapNodes: [
     { label: "ORIGIN", sub: "USA", icon: "\u{1F1FA}\u{1F1F8}" },
