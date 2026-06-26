@@ -162,7 +162,7 @@ export function BeatCGeneric({ config }: { config: BeatCConfig }) {
               <div className="space-y-3 text-sm">
                 <div className="bg-customs-surface rounded-lg p-3 border border-customs-border">
                   <p className="text-white font-medium mb-1">Your mission</p>
-                  <p className="text-customs-muted">{config.briefingMission}</p>
+                  <p className="text-customs-muted" dangerouslySetInnerHTML={{ __html: config.briefingMission }} />
                 </div>
 
                 <div className="bg-customs-surface rounded-lg p-3 border border-customs-border">
@@ -176,7 +176,7 @@ export function BeatCGeneric({ config }: { config: BeatCConfig }) {
 
                 <div className="bg-customs-surface rounded-lg p-3 border border-customs-border">
                   <p className="text-white font-medium mb-1">Scoring</p>
-                  <p className="text-customs-muted">{config.briefingScoreText}</p>
+                  <p className="text-customs-muted" dangerouslySetInnerHTML={{ __html: config.briefingScoreText }} />
                 </div>
               </div>
 
