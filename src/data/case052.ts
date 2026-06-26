@@ -31,7 +31,7 @@ export const CASE_052 = {
 
   canonicalPermit: {
     messageType: "OUT" as const,
-    declarationType: "OUT_STD",
+    declarationType: "DRT",
     exporterUEN: "201756789K",
     declaringAgentUEN: "199804321D",
     buyer: "Carl Zeiss AG, Germany",

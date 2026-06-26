@@ -73,15 +73,26 @@ const RECEIPT_OTHERS_OPTIONS = [
 ];
 
 const DECL_TYPE_IMPORT = [
-  { value: "APS", label: "APS \u2014 Standard Import Permit" },
-  { value: "APS_PREF", label: "APS \u2014 Preferential Tariff" },
+  // IN-PAYMENT (IPT) — duty and/or GST payable
+  { value: "DNG", label: "DNG \u2014 Duty & GST" },
+  { value: "GST", label: "GST \u2014 GST only (non-dutiable)" },
+  { value: "DUT", label: "DUT \u2014 Duty only" },
+  // IN-NON-PAYMENT (INP) — duty/GST suspended or exempted
+  { value: "APS", label: "APS \u2014 Approved Premises/Schemes" },
+  { value: "SFZ", label: "SFZ \u2014 Storage in FTZ" },
+  { value: "GTR", label: "GTR \u2014 GST Relief / Duty Exemption" },
+  { value: "REX", label: "REX \u2014 Re-export" },
 ];
-const DECL_TYPE_EXPORT = [{ value: "OUT_STD", label: "Standard Export" }];
+const DECL_TYPE_EXPORT = [
+  { value: "DRT", label: "DRT \u2014 Direct" },
+  { value: "APS", label: "APS \u2014 Approved Premises/Schemes (from LW/ZGS)" },
+];
 const DECL_TYPE_TSHIP = [
-  { value: "TTI", label: "TTI \u2014 Through Transhipment" },
+  { value: "TTF", label: "TTF \u2014 Through Transhipment (same FTZ)" },
+  { value: "TTI", label: "TTI \u2014 Through Transhipment (inter-gateway)" },
   { value: "IGM", label: "IGM \u2014 Inter-Gateway Movement" },
-  { value: "REM", label: "Removal (REM)" },
-  { value: "BRE", label: "Blanket Removal (BRE)" },
+  { value: "REM", label: "REM \u2014 Removal (between LW/ZGS)" },
+  { value: "BRE", label: "BRE \u2014 Blanket Removal" },
 ];
 
 const STANDARD_DECL_OPTS: Record<string, { value: string; label: string }[]> = {
@@ -151,9 +162,9 @@ function validatePermit014(values: Record<string, string>, scaffolding: number):
 function scorePermit014(values: Record<string, string>): ScoringResult {
   const checks: { field: string; yours: () => string; expected: string; check: () => boolean }[] = [
     { field: "Message Type", yours: () => values.messageType || "\u2014", expected: "IN", check: () => values.messageType === "IN" },
-    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "APS", check: () => values.declarationType === "APS" },
+    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "DNG", check: () => values.declarationType === "DNG" },
     { field: "Importer UEN", yours: () => values.importerUEN || "\u2014", expected: "201835672K", check: () => values.importerUEN === "201835672K" },
-    { field: "Place of Release", yours: () => values.placeOfReleaseFTZ || "\u2014", expected: "T15 (FTZ)", check: () => values.placeOfReleaseFTZ === "T15" },
+    { field: "Place of Release", yours: () => values.placeOfReleaseFTZ || "\u2014", expected: "PP1 (Pasir Panjang FTZ)", check: () => values.placeOfReleaseFTZ === "PP1" },
     { field: "Place of Receipt", yours: () => values.placeOfReceiptOthers || "\u2014", expected: "Others", check: () => values.placeOfReceiptOthers === "Others" },
     { field: "HS Code", yours: () => values.hsCode || "\u2014", expected: "2204.21", check: () => values.hsCode?.startsWith("2204.21") || false },
     { field: "HS Quantity", yours: () => values.hsQuantity ? `${values.hsQuantity} ${values.hsUnit || "?"}` : "\u2014", expected: "900.000 LTR", check: () => { const q = parseFloat(values.hsQuantity); return !isNaN(q) && Math.abs(q - 900) < 5; } },
@@ -273,16 +284,17 @@ export const BEAT_A_014: BeatAConfig = {
   ],
   paymentTooltip: "G1 = pay now. Wine is dutiable, so G1 is correct here.",
   messageTypeTooltip: "Message Type = direction of movement. Goods entering Singapore = IN.",
-  declarationTypeTooltip: "Declaration Type narrows what fields TradeNet requires. Watch the form change.",
+  declarationTypeTooltip: "IN-PAYMENT types: DNG (Duty & GST) for dutiable goods, GST for non-dutiable. IN-NON-PAYMENT: APS for warehouse/scheme movements. Wine is dutiable \u2192 DNG.",
   rulebookTitle: "Rulebook",
   rulebookEntries: [
     { title: "Message Types", content: "IN = Import, OUT = Export, Transhipment/Movement, COO" },
+    { title: "IN Declaration Types", content: "IN-PAYMENT: DNG (Duty & GST) for dutiable goods, GST for non-dutiable, DUT for duty-only. IN-NON-PAYMENT: APS (Approved Premises/Schemes) for LW/ZGS/MES movements, SFZ (FTZ storage), GTR (relief/exemption), REX (re-export)." },
     { title: "HS Code", content: "Still wine in containers \u2264 2L: 2204.21. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 2204.21 is LTR (litres), not bottles. Convert: bottles x 0.75L." },
     { title: "Packing (Liquor)", content: "Dutiable liquor must be declared to bottle level. Outer: CTN, In-pack: BOT. Cigarettes/cigars must go down to the stick (STK)." },
     { title: "Valuation (FOB)", content: "When INCOTERM = FOB, add freight + insurance to get CIF. CIF = FOB + Freight + Insurance. Common error: omitting freight/insurance or using unit price instead of total value." },
     { title: "Gross Weight", content: "Sea = TNE (metric tonnes). Air = KGM. For IN/TNP: weight is based on the INWARD leg. For OUT: based on OUTWARD leg." },
-    { title: "Payment", content: "G1 = pay at approval. GF/G7 = GIRO. GF/G7 same-day window for non-dutiable only. Breach of G1/GF conditions is an offence under the Customs Act." },
+    { title: "Payment", content: "G1 = pay at approval (dutiable goods). GF/G7 = GIRO (non-dutiable). GF/G7 same-day amendment window. Breach of G1/GF conditions is an offence under the Customs Act." },
     { title: "Common Errors", content: "Top errors per Singapore Customs: (1) Wrong declaration type, (2) Incorrect Place of Release/Receipt, (3) Wrong container number, (4) Incorrect UEN, (5) Wrong HS code or non-itemisation, (6) Wrong HS Qty/UOM, (7) Wrong CIF value due to incorrect currency, omitted invoices, or INCOTERM confusion." },
     { title: "Permit Conditions", content: "Once CCP is issued, you must: present permit at FTZ checkpoint for endorsement, return Z02/Z06/Z18 documents within 48 hrs, and pay duty/GST per G1/GF condition. Failure = offence under Customs Act (Cap 70) or RIEA (Cap 272A)." },
   ],
@@ -346,7 +358,7 @@ function validatePermit025(values: Record<string, string>, scaffolding: number):
 function scorePermit025(values: Record<string, string>): ScoringResult {
   const checks: { field: string; yours: () => string; expected: string; check: () => boolean }[] = [
     { field: "Message Type", yours: () => values.messageType || "\u2014", expected: "IN", check: () => values.messageType === "IN" },
-    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "APS", check: () => values.declarationType === "APS" },
+    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "GST", check: () => values.declarationType === "GST" },
     { field: "Importer UEN", yours: () => values.importerUEN || "\u2014", expected: "200412345D", check: () => values.importerUEN === "200412345D" },
     { field: "Place of Release", yours: () => values.placeOfReleaseFTZ || "\u2014", expected: "C01 (Changi)", check: () => values.placeOfReleaseFTZ === "C01" },
     { field: "Place of Receipt", yours: () => values.placeOfReceiptOthers || "\u2014", expected: "Others", check: () => values.placeOfReceiptOthers === "Others" },
@@ -468,10 +480,11 @@ export const BEAT_A_025: BeatAConfig = {
   ],
   paymentTooltip: "G1 = dutiable. GF = non-dutiable (GIRO). Laptops are NOT dutiable in Singapore.",
   messageTypeTooltip: "Message Type = direction of movement. Goods entering Singapore = IN.",
-  declarationTypeTooltip: "Declaration Type narrows what fields TradeNet requires. Watch the form change.",
+  declarationTypeTooltip: "IN-PAYMENT types: DNG (Duty & GST) for dutiable goods, GST for non-dutiable. Laptops are non-dutiable \u2192 GST.",
   rulebookTitle: "Rulebook",
   rulebookEntries: [
     { title: "Message Types", content: "IN = Import, OUT = Export, Transhipment/Movement, COO" },
+    { title: "IN Declaration Types", content: "IN-PAYMENT: DNG (Duty & GST) for dutiable goods, GST for non-dutiable, DUT for duty-only. IN-NON-PAYMENT: APS (Approved Premises/Schemes) for LW/ZGS/MES movements, SFZ (FTZ storage), GTR (relief/exemption), REX (re-export). Laptops are non-dutiable \u2192 GST." },
     { title: "HS Code", content: "Portable data processing machines (laptops) \u2264 10kg: 8471.30. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 8471.30 is U (units). Not KGM, not PCS." },
     { title: "CIF vs FOB", content: "When INCOTERM = CIF, freight + insurance are INCLUDED. Do NOT add separately.", extra: "When INCOTERM = FOB, you must ADD freight + insurance to get CIF." },
@@ -495,8 +508,8 @@ function validatePermit038(values: Record<string, string>, scaffolding: number):
   if (msgType === "TSHIP" && values.declarationType && values.declarationType !== "TTI") {
     errors.push({ code: "T-T2", field: "declarationType", message: "For through-transhipment with an inward manifest, the correct declaration type is TTI.", severity: scaffolding === 1 ? "soft" : "hard" });
   }
-  if (msgType === "IN" && values.declarationType === "APS") {
-    errors.push({ code: "T-T2", field: "declarationType", message: "APS is for imports into Singapore. These goods are transiting \u2014 they never enter Singapore's customs territory.", severity: "soft" });
+  if (msgType === "IN" && (values.declarationType === "DNG" || values.declarationType === "GST" || values.declarationType === "APS")) {
+    errors.push({ code: "T-T2", field: "declarationType", message: "IN declaration types are for imports into Singapore. These goods are transiting \u2014 they never enter Singapore's customs territory. Use TSHIP.", severity: "soft" });
   }
   if (msgType === "TSHIP" && values.placeOfReceiptFTZ === "Others") {
     errors.push({ code: "T-T3", field: "placeOfReceiptFTZ", message: "For transhipment, goods stay in the FTZ for reloading. Place of Receipt should be an FTZ location, not 'Others'.", severity: scaffolding === 1 ? "soft" : "hard" });
@@ -574,14 +587,9 @@ export const BEAT_A_038: BeatAConfig = {
   ],
   fieldsToResetOnMsgTypeChange: ["declarationType", "placeOfReleaseFTZ", "placeOfReceiptFTZ"],
   declTypeOptions: {
-    IN: [{ value: "APS", label: "APS \u2014 Standard Import Permit" }],
+    IN: DECL_TYPE_IMPORT,
     OUT: DECL_TYPE_EXPORT,
-    TSHIP: [
-      { value: "TTI", label: "TTI \u2014 Through Transhipment (Inward)" },
-      { value: "IGM", label: "IGM \u2014 Inter-Gateway Movement" },
-      { value: "REM", label: "Removal (REM)" },
-      { value: "BRE", label: "Blanket Removal (BRE)" },
-    ],
+    TSHIP: DECL_TYPE_TSHIP,
   },
   agentLabel: "Declaring Agent / Through Agent UEN",
   uenField: undefined,
@@ -664,15 +672,14 @@ export const BEAT_A_038: BeatAConfig = {
   ],
   paymentTooltip: "Is payment condition applicable for transhipment permits?",
   messageTypeTooltip: "Are these goods entering Singapore for local use, or passing THROUGH to another country?",
-  declarationTypeTooltip: "TTI = Through Transhipment with Inward manifest. The goods arrive and depart without entering customs territory.",
+  declarationTypeTooltip: "TSHIP types: TTF (same FTZ, controlled goods), TTI (inter-gateway), IGM (inter-gateway movement), REM (between LW/ZGS), BRE (blanket removal). This is inter-gateway \u2192 TTI.",
   rulebookTitle: "Rulebook \u2014 Transhipment",
   rulebookEntries: [
     { title: "Transhipment (TSHIP)", content: "Goods passing THROUGH Singapore to another destination. They never enter Singapore's customs territory for local consumption." },
-    { title: "TTI Declaration", content: "Through Transhipment with Inter-gateway movement (TTI) \u2014 goods moving from one FTZ to another different FTZ. For same-FTZ transhipment of controlled goods, use TTF." },
+    { title: "TSHIP Declaration Types", content: "TTF = Through Transhipment within same FTZ (controlled goods only). TTI = Through Transhipment with Inter-Gateway Movement (covered by Through B/L or MAWB). IGM = Inter-Gateway Movement (previously on INP-SFZ permits, LCL consolidation). REM = Removal between licensed premises (LW\u2194LW, ZGS\u2194ZGS). BRE = Blanket Removal (multiple movements within same month)." },
     { title: "Place of Release/Receipt", content: "For transhipment, BOTH should be FTZ locations. Goods arrive at and depart from the FTZ \u2014 they never leave it." },
     { title: "No Duty/GST", content: "Transhipped goods never enter Singapore's customs territory. No duty or GST is payable. Payment condition field is hidden." },
     { title: "HS Code 9013.80", content: "Flat panel display devices (OLED). HS unit = U (units). Non-dutiable electronics component." },
-    { title: "Transhipment Types", content: "TTF = same FTZ (controlled goods only). TTI = inter-gateway (FTZ to different FTZ). IGM = inter-gateway movement pending re-export. REM = removal between licensed/ZGS warehouses. BRE = blanket removal." },
     { title: "No Manipulation", content: "During inter-gateway movement, no manipulation of goods is allowed en route (no re-packing, sorting, or re-labeling). Goods must arrive intact at destination FTZ." },
   ],
 };
@@ -733,7 +740,7 @@ function validatePermit052(values: Record<string, string>, scaffolding: number):
 function scorePermit052(values: Record<string, string>): ScoringResult {
   const checks: { field: string; yours: () => string; expected: string; check: () => boolean }[] = [
     { field: "Message Type", yours: () => values.messageType || "\u2014", expected: "OUT", check: () => values.messageType === "OUT" },
-    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "OUT_STD", check: () => values.declarationType === "OUT_STD" },
+    { field: "Declaration Type", yours: () => values.declarationType || "\u2014", expected: "DRT", check: () => values.declarationType === "DRT" },
     { field: "Exporter UEN", yours: () => values.exporterUEN || "\u2014", expected: "201756789K", check: () => values.exporterUEN === "201756789K" },
     { field: "Place of Receipt (FTZ)", yours: () => values.placeOfReceiptFTZ || "\u2014", expected: "T16 (Keppel)", check: () => values.placeOfReceiptFTZ === "T16" },
     { field: "HS Code", yours: () => values.hsCode || "\u2014", expected: "9001.90", check: () => values.hsCode?.startsWith("9001.90") || false },
@@ -852,11 +859,11 @@ export const BEAT_A_052: BeatAConfig = {
   ],
   paymentTooltip: "GF = GIRO. Exports are non-dutiable, so GF is correct here.",
   messageTypeTooltip: "Message Type = direction of movement. Goods leaving Singapore = OUT.",
-  declarationTypeTooltip: "Declaration Type narrows what fields TradeNet requires. Watch the form change.",
+  declarationTypeTooltip: "OUT types: DRT (Direct) for locally manufactured or GST-paid goods. APS for exports from LW/ZGS warehouses. This is a direct export \u2192 DRT.",
   rulebookTitle: "Rulebook",
   rulebookEntries: [
     { title: "Message Types", content: "IN = Import, OUT = Export, Transhipment/Movement, COO" },
-    { title: "OUT Declaration Types", content: "DRT (Direct) = locally manufactured or GST-paid goods. APS = from LW/ZGS warehouse. BKT = blanket arrangement. TCR/TCO/TCS/TCE = temporary consignment re-export." },
+    { title: "OUT Declaration Types", content: "DRT (Direct) = locally manufactured or GST-paid goods exported directly, or re-exported from FTZ storage. APS = exports from Licensed Warehouse or Zero-GST Warehouse. BKT = blanket arrangement. TCR/TCO/TCS/TCE/TCI = temporary consignment re-export under TIS." },
     { title: "HS Code", content: "Optical lenses (other than contact/spectacle): 9001.90. Declare to full digit level per STCCED 2022." },
     { title: "HS Qty Unit", content: "STCCED 2022 unit for 9001.90 is U (units)." },
     { title: "Export Valuation (FOB)", content: "For FOB exports, declare FOB value only. Freight and insurance are the buyer's cost and should NOT be added. Common error: including freight/insurance in export value." },

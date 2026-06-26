@@ -90,25 +90,25 @@ export const BEAT_B_014: BeatBConfig = {
 
   tshipSubtypes: [
     {
-      label: "Through Transhipment within same FTZ",
+      label: "TTF \u2014 Through Transhipment (same FTZ)",
       tooltip:
-        "Only covers goods staying inside one FTZ \u2014 the wine needs to cross into Singapore proper.",
+        "TTF is for controlled goods staying within one FTZ \u2014 the wine needs to cross into Singapore proper for consumption.",
     },
     {
-      label: "TTI \u2014 Inter-Gateway Movement",
-      tooltip: "For moving goods between gateways, not for importing.",
+      label: "TTI \u2014 Through Transhipment (inter-gateway)",
+      tooltip: "For goods moving between FTZs (covered by Through B/L or MAWB), not for importing.",
     },
     {
       label: "IGM \u2014 Inter-Gateway Movement",
-      tooltip: "For inter-gateway cargo routing.",
+      tooltip: "For inter-gateway cargo routing (previously on INP-SFZ permits).",
     },
     {
-      label: "Removal (REM)",
-      tooltip: "For removing goods from licensed warehouses.",
+      label: "REM \u2014 Removal (between LW/ZGS)",
+      tooltip: "For removing goods between licensed or zero-GST warehouses.",
     },
     {
-      label: "Blanket Removal (BRE)",
-      tooltip: "For pre-approved bulk removals.",
+      label: "BRE \u2014 Blanket Removal",
+      tooltip: "For pre-approved bulk removals within same month.",
     },
   ],
 
@@ -126,7 +126,7 @@ export const BEAT_B_014: BeatBConfig = {
 
   gate2CorrectText: "IN / Import is correct.",
   gate2MovingText: "\u{1F69B} Loading onto truck for FTZ gate clearance...",
-  gate2ProcedureNote: "TradeNet approved your IN permit. The Cargo Clearance Permit (CCP) is printed. Payment condition: G1 (duty/GST must be paid at UOB before removal from FTZ). Next: present CCP + supporting documents at the FTZ OUT gate.",
+  gate2ProcedureNote: "TradeNet approved your IN permit (Declaration Type: DNG \u2014 Duty & GST). The Cargo Clearance Permit (CCP) is printed. Payment condition: G1 (duty/GST must be paid at UOB before removal from FTZ). Next: present CCP + supporting documents at the FTZ OUT gate.",
 
   gate3Header: "LEG 3: FTZ GATE CLEARANCE (Condition A1)",
   gate3Description:
@@ -213,25 +213,25 @@ export const BEAT_B_025: BeatBConfig = {
 
   tshipSubtypes: [
     {
-      label: "Through Transhipment within same FTZ",
+      label: "TTF \u2014 Through Transhipment (same FTZ)",
       tooltip:
-        "Only covers goods staying inside one FTZ \u2014 the MacBooks need to enter Singapore proper.",
+        "TTF is for controlled goods staying within one FTZ \u2014 the MacBooks need to enter Singapore proper for retail.",
     },
     {
-      label: "TTI \u2014 Inter-Gateway Movement",
-      tooltip: "For moving goods between gateways, not for importing.",
+      label: "TTI \u2014 Through Transhipment (inter-gateway)",
+      tooltip: "For goods moving between FTZs (covered by Through B/L or MAWB), not for importing.",
     },
     {
       label: "IGM \u2014 Inter-Gateway Movement",
-      tooltip: "For inter-gateway cargo routing.",
+      tooltip: "For inter-gateway cargo routing (previously on INP-SFZ permits).",
     },
     {
-      label: "Removal (REM)",
-      tooltip: "For removing goods from licensed warehouses.",
+      label: "REM \u2014 Removal (between LW/ZGS)",
+      tooltip: "For removing goods between licensed or zero-GST warehouses.",
     },
     {
-      label: "Blanket Removal (BRE)",
-      tooltip: "For pre-approved bulk removals.",
+      label: "BRE \u2014 Blanket Removal",
+      tooltip: "For pre-approved bulk removals within same month.",
     },
   ],
 
@@ -249,7 +249,7 @@ export const BEAT_B_025: BeatBConfig = {
 
   gate2CorrectText: "IN / Import is correct.",
   gate2MovingText: "\u{1F69B} Arranging truck pickup from airfreight terminal...",
-  gate2ProcedureNote: "TradeNet approved your IN permit. CCP issued with payment condition GF (GST deducted via GIRO from importer\u2019s account). For non-dutiable goods, no UOB payment is needed \u2014 GIRO auto-deducts. Present CCP at Changi Airfreight Centre gate.",
+  gate2ProcedureNote: "TradeNet approved your IN permit (Declaration Type: GST). CCP issued with payment condition GF (GST deducted via GIRO from importer\u2019s account). For non-dutiable goods, no UOB payment is needed \u2014 GIRO auto-deducts. Present CCP at Changi Airfreight Centre gate.",
 
   gate3Header: "LEG 3: AIRFREIGHT CENTRE GATE",
   gate3Description:
@@ -432,25 +432,25 @@ export const BEAT_B_052: BeatBConfig = {
 
   tshipSubtypes: [
     {
-      label: "Through Transhipment within same FTZ",
+      label: "TTF \u2014 Through Transhipment (same FTZ)",
       tooltip:
-        "Only covers goods staying inside one FTZ \u2014 these lenses need to leave Singapore entirely.",
+        "TTF is for controlled goods staying within one FTZ \u2014 these lenses need to leave Singapore entirely.",
     },
     {
-      label: "TTI \u2014 Inter-Gateway Movement",
-      tooltip: "For moving goods between gateways, not for exporting.",
+      label: "TTI \u2014 Through Transhipment (inter-gateway)",
+      tooltip: "For goods moving between FTZs, not for exporting.",
     },
     {
       label: "IGM \u2014 Inter-Gateway Movement",
-      tooltip: "For inter-gateway cargo routing.",
+      tooltip: "For inter-gateway cargo routing (previously on INP-SFZ permits).",
     },
     {
-      label: "Removal (REM)",
-      tooltip: "For removing goods from licensed warehouses.",
+      label: "REM \u2014 Removal (between LW/ZGS)",
+      tooltip: "For removing goods between licensed or zero-GST warehouses.",
     },
     {
-      label: "Blanket Removal (BRE)",
-      tooltip: "For pre-approved bulk removals.",
+      label: "BRE \u2014 Blanket Removal",
+      tooltip: "For pre-approved bulk removals within same month.",
     },
   ],
 
@@ -468,7 +468,7 @@ export const BEAT_B_052: BeatBConfig = {
 
   gate2CorrectText: "OUT / Export is correct.",
   gate2MovingText: "\u{1F6A2} Arranging container loading at Keppel berth...",
-  gate2ProcedureNote: "TradeNet approved your OUT permit. CCP issued with payment condition GF (GIRO). For exports, the CCP must be produced at the port gate BEFORE the vessel departs. Singapore Customs requires the export permit to be submitted at least 24 hours before vessel ETD.",
+  gate2ProcedureNote: "TradeNet approved your OUT permit (Declaration Type: DRT \u2014 Direct). CCP issued with payment condition GF (GIRO). For exports, the CCP must be produced at the port gate BEFORE the vessel departs. Singapore Customs requires the export permit to be submitted at least 24 hours before vessel ETD.",
 
   gate3Header: "LEG 3: PORT GATE CLEARANCE (Export)",
   gate3Description:
